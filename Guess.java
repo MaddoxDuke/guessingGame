@@ -52,7 +52,7 @@ public class Guess {
 			case 'n':
 				if(t.isLeaf(c)) {
 
-					s.nextLine();//clear buffer
+					s.nextLine();
 
 					System.out.println("What is your animal?");
 					String animal = s.nextLine();
@@ -146,27 +146,17 @@ public class Guess {
 			
 			br.close();
 			
-			//Assign the new root node
-			if (questions.size() > 1) {
-	            t.root = questions.get(1);
-	        }
-			//Root node at position 1 rather than 0 for placeholding
-			//Link nodes based on binary tree relationships
+			//Initialize root node
+			if (questions.size() > 1) t.root = questions.get(1); // Hashtag one liner
+	        
 			for (int i = 1; i < questions.size(); i++) {
 
-				Node node = questions.get(i);
-				//dirty nested if statements but works :)
-				if (node != null) {
-
-					if (2 * i + 1 < questions.size() && questions.get(2 * i + 1) != null) {
-						//right child of the new binary tree
-						node.no = questions.get(2 * i + 1);
-					} 
-					if (2 * i < questions.size() && questions.get(2 * i) != null) {
-						//left child of the binary tree
-						node.yes = questions.get(2 * i);
-					}
-				}
+				Node node = questions.get(i);	
+				//right child of the new binary tree	
+				if (2 * i + 1 < questions.size() && questions.get(2 * i + 1) != null) node.no = questions.get(2 * i + 1);
+				//left child of the binary tree
+				if (2 * i < questions.size() && questions.get(2 * i) != null) node.yes = questions.get(2 * i);
+				
 			}
 		} catch (IOException e) {
 			System.out.println("File Error: " + dataFile);
@@ -176,15 +166,13 @@ public class Guess {
 	}
 
 	public static void exportTree(Node r, int nodeID, String dataFile) throws IOException {
-		if (r.yes != null) {
-			exportTree(r.yes, nodeID * 2, dataFile); //Id get multiplied by 2 if yes
-		}
+		if (r.yes != null) exportTree(r.yes, nodeID * 2, dataFile); //Id get multiplied by 2 if yes
+		
 
 		System.out.println(nodeID + " " + r.question);
 		writeToFile(dataFile,nodeID,r.question);
-		if (r.no != null) {
-			exportTree(r.no, nodeID * 2 + 1,dataFile); //Id get multiplied by 2 and ++ if no
-		}
+		
+		if (r.no != null) exportTree(r.no, nodeID * 2 + 1,dataFile); //Id get multiplied by 2 and ++ if no
 	}
 
 	private static void writeToFile(String fileName, int nodeID, String question) {
